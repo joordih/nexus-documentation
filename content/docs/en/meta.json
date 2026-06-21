@@ -1,0 +1,16 @@
+{
+  "title": "Nexus",
+  "pages": [
+    "index",
+    "primitive-types",
+    "modules-imports",
+    "declarations",
+    "variables",
+    "control-flow",
+    "expressions",
+    "null-safety",
+    "built-in-types",
+    "grammar",
+    "architecture"
+  ]
+}

@@ -1,0 +1,114 @@
+---
+title: Control flow
+description: Control flow statements in Nexus.
+icon: GitBranch
+---
+
+## if / else
+
+```nexus
+if condition {
+    doIfTrue()
+} else {
+    doIfFalse()
+}
+```
+
+`else if` is also supported:
+
+```nexus
+if x > 0 {
+    io.println("positive")
+} else if x < 0 {
+    io.println("negative")
+} else {
+    io.println("zero")
+}
+```
+
+## while
+
+```nexus
+while condition {
+    doWork()
+}
+```
+
+## for...in
+
+Iterates over a list or other collection:
+
+```nexus
+for item in list {
+    io.println(item)
+}
+```
+
+## switch
+
+```nexus
+switch value {
+    case 1 => doAction()
+    case 2 => doOtherAction()
+    default => doDefault()
+}
+```
+
+Each arm can be an expression or a block:
+
+```nexus
+switch status {
+    case "active" => {
+        connect()
+        initialize()
+    }
+    default => io.println("inactive")
+}
+```
+
+## return
+
+```nexus
+add(a: Int, b: Int): Int {
+    return a + b
+}
+```
+
+`return` without an expression is valid in `Void` functions.
+
+## break and continue
+
+```nexus
+while true {
+    var line = io.readLine()
+    if line == "" {
+        break
+    }
+    if line == "skip" {
+        continue
+    }
+    process(line)
+}
+```
+
+## try / catch / throw
+
+```nexus
+try {
+    var result = riskyOperation()
+} catch (err) {
+    io.println(err)
+}
+```
+
+```nexus
+throw
+```
+
+<Callout type="info">
+  `try`, `catch` and `throw` are in the parser and partially in sema/codegen. See `docs/NOTES.md` for the exact status.
+</Callout>
+
+## Semicolons are optional
+
+The `;` at the end of a statement is valid but not required.

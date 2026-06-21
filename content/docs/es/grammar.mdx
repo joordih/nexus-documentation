@@ -1,0 +1,143 @@
+---
+title: Gramática
+description: Gramática formal de Nexus Core en notación EBNF.
+icon: ScrollText
+---
+
+Esta es la gramática autoritativa de Nexus Core. Usa una variante de EBNF:
+
+- `=` define una regla. `|` separa alternativas.
+- `{ X }` cero o más. `[ X ]` opcional.
+- `"texto"` terminal literal. MAYÚSCULAS = token del lexer.
+
+## Estructura léxica
+
+### Identificadores y palabras clave
+
+```
+letter = "a" .. "z" | "A" .. "Z" | "_" ;
+digit  = "0" .. "9" ;
+IDENT  = letter { letter | digit } ;
+```
+
+Palabras reservadas:
+
+```
+var val final class data value interface annotation
+import module extends implements
+if else while for in switch case default
+return break continue try catch throw
+true false null this
+```
+
+Los nombres de tipos primitivos (`Int`, `Bool`, `String`, `Void`, etc.) son identificadores predeclarados, no palabras clave.
+
+### Literales
+
+```
+INT    = digit { digit } ;
+FLOAT  = digit { digit } "." digit { digit } ;
+STRING = '"' { string_char } '"' ;
+CHAR   = "'" ( char_char | escape ) "'" ;
+escape = "\" ( '"' | "'" | "\" | "n" | "t" | "r" | "0" ) ;
+```
+
+### Operadores y puntuación
+
+```
++  -  *  /  %   ==  !=  <  <=  >  >=   &&  ||  !
+=  =>  ->   .  ,  :  ;   (  )  {  }  [  ]   @  ?  ?.  ?:
+```
+
+Munch máximo: `?.` y `?:` tienen prioridad sobre `?` solo.
+
+## Gramática sintáctica
+
+### Programa y elementos
+
+```
+program = { item } EOF ;
+item    = module_decl | import_decl | global_decl | class_decl
+        | data_decl | value_decl | interface_decl | annotation_decl | function ;
+```
+
+### Módulo, imports, globales
+
+```
+module_decl = "module" dot_path ;
+import_decl = "import" dot_path ;
+dot_path    = IDENT { "." IDENT } ;
+global_decl = ( "var" | "val" | "final" ) IDENT [ ":" type ] "=" expr [ ";" ] ;
+```
+
+### Data, value, class, interface
+
+```
+data_decl      = { annotation_use } "data"  IDENT "{" { field_decl } "}" ;
+value_decl     = { annotation_use } "value" IDENT "{" { field_decl } "}" ;
+field_decl     = IDENT ":" type ;
+class_decl     = { annotation_use } "class" IDENT [ type_params ]
+                 [ "(" [ field_list ] ")" ]
+                 [ "extends" type ] [ "implements" type { "," type } ]
+                 "{" { class_member } "}" ;
+interface_decl = { annotation_use } "interface" IDENT [ type_params ]
+                 [ "extends" type { "," type } ]
+                 "{" { method_sig } "}" ;
+annotation_decl = "annotation" IDENT "{" { field_decl } "}" ;
+annotation_use  = "@" IDENT [ "(" named_arg_list ")" ] ;
+```
+
+### Funciones y tipos
+
+```
+function      = IDENT "(" [ param_list ] ")" ":" type function_body ;
+param_list    = param { "," param } ;
+param         = IDENT ":" type ;
+function_body = block | "=>" expr ;
+type          = named_type [ "?" ] ;
+named_type    = dot_path [ "<" type_args ">" ] ;
+type_args     = type { "," type } ;
+```
+
+### Sentencias
+
+```
+block         = "{" { stmt } "}" ;
+stmt          = var_stmt | return_stmt | break_stmt | continue_stmt
+              | if_stmt | while_stmt | for_stmt | switch_stmt
+              | try_stmt | throw_stmt | expr_stmt ;
+var_stmt      = ( "var" | "val" | "final" ) IDENT [ ":" type ] "=" expr [ ";" ] ;
+if_stmt       = "if" expr block [ "else" ( if_stmt | block ) ] ;
+while_stmt    = "while" expr block ;
+for_stmt      = "for" IDENT "in" expr block ;
+switch_stmt   = "switch" expr "{" { switch_arm } "}" ;
+switch_arm    = ( "case" expr | "default" ) "=>" ( block | expr [ ";" ] ) ;
+try_stmt      = "try" block "catch" "(" IDENT ")" block ;
+throw_stmt    = "throw" [ ";" ] ;
+```
+
+### Expresiones
+
+```
+expr       = elvis_expr ;
+elvis_expr = or_expr [ "?:" or_expr ] ;
+or_expr    = and_expr { "||" and_expr } ;
+and_expr   = equality { "&&" equality } ;
+equality   = comparison { ( "==" | "!=" ) comparison } ;
+comparison = term { ( "<" | "<=" | ">" | ">=" ) term } ;
+term       = factor { ( "+" | "-" ) factor } ;
+factor     = unary { ( "*" | "/" | "%" ) unary } ;
+unary      = ( "!" | "-" ) unary | postfix ;
+postfix    = primary { "." IDENT [ call_args ] | "?." IDENT [ call_args ]
+                     | call_args | "[" expr "]" | "!" } ;
+call_args  = "(" [ call_arg { "," call_arg } ] ")" ;
+call_arg   = IDENT ":" expr | expr ;
+primary    = INT | FLOAT | STRING | CHAR | "true" | "false" | "null" | "this"
+           | lambda_expr | list_literal | IDENT | "(" expr ")" ;
+lambda_expr  = ( IDENT | "(" [ IDENT { "," IDENT } ] ")" ) "=>" expr ;
+list_literal = "[" [ expr { "," expr } ] "]" ;
+```
+
+## Fuera del alcance actual
+
+No incluido en Nexus Core hoy: asignación compuesta (`+=`, `-=`, `*=`, `/=`), comprensiones de lista, macros.

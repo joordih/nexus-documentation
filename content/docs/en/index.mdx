@@ -1,0 +1,36 @@
+---
+title: Nexus
+description: A statically typed language that compiles to native C with garbage collection.
+icon: BookOpen
+---
+
+Nexus is a statically typed language that compiles to native C with garbage collection (Boehm GC). The compiler is self-hosted: written in Nexus and compiling itself.
+
+## Current status
+
+| Area | Status |
+|------|--------|
+| `import`, functions, `data`, `value`, `class`, local and global variables | Sema and codegen complete |
+| `List<T>`, `Map<K,V>`, null safety (`T?`, `?.`, `?:`, `!`) | Sema and codegen complete |
+| `if`/`else`, `while`, `for...in`, `switch`, lambdas, named arguments | Sema and codegen complete |
+| `module`, `interface`, `annotation`, `extends`, `implements`, type params `<T>` | Parser only: syntax is valid but sema and codegen do not yet process them |
+
+## Project components
+
+| Component | Location | Status |
+|-----------|----------|--------|
+| Seed compiler (Rust) | `bootstrap/` | Working; only needed to rebuild from scratch |
+| Self-hosted compiler | `compiler/src/` | Working; `nxc-stage2` is the reference compiler |
+| Bootstrap fixed-point | `make verify-bootstrap` | Green: stage2 and stage3 are byte-identical |
+| C runtime | `runtime/` | Working: GC, List, Map, IO, LSP/TCP primitives |
+| Stdlib and LSP | `nx/std/`, `nx/lsp/` | JSON, LSP server, IDE features |
+| VS Code extension | `vscode-nexus/` | Working with bundled `nexus-lsp` |
+
+<Cards>
+  <Card title="Primitive types" href="/docs/en/primitive-types" />
+  <Card title="Modules & imports" href="/docs/en/modules-imports" />
+  <Card title="Declarations" href="/docs/en/declarations" />
+  <Card title="Control flow" href="/docs/en/control-flow" />
+  <Card title="Null safety" href="/docs/en/null-safety" />
+  <Card title="Full grammar" href="/docs/en/grammar" />
+</Cards>

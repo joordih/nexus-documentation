@@ -1,0 +1,78 @@
+---
+title: Expresiones
+description: Operadores, precedencia y formas de expresión en Nexus.
+icon: Calculator
+---
+
+## Precedencia de operadores
+
+De menor a mayor ligadura:
+
+| Nivel | Operador(es) | Asociatividad |
+|-------|-------------|---------------|
+| 1 | `?:` (Elvis) | Derecha |
+| 2 | `\|\|` | Izquierda |
+| 3 | `&&` | Izquierda |
+| 4 | `==` `!=` | Izquierda |
+| 5 | `<` `<=` `>` `>=` | Izquierda |
+| 6 | `+` `-` | Izquierda |
+| 7 | `*` `/` `%` | Izquierda |
+| 8 | `!` `-` (unarios prefijos) | — |
+| 9 | `()` `.x` `?.x` `[]` `!` (sufijos) | Máxima |
+
+## Aritmética, relacionales, lógicos
+
+```nexus
+var suma = 10 + 3
+var mayor = 5 > 3
+var igual = a == b
+var y     = a && b
+var no    = !a
+```
+
+## Acceso a campos y llamadas a métodos
+
+```nexus
+p.x
+svc.calcular(p)
+lista.length()
+```
+
+Un sufijo `.nombre` seguido de `(...)` es una llamada a método; sin paréntesis es acceso a campo.
+
+## Argumentos nombrados
+
+```nexus
+var p = Punto(x: 3, y: 4)
+dibujar(origen: p, escala: 2)
+```
+
+Los argumentos nombrados y posicionales pueden mezclarse en la misma llamada.
+
+## Acceso a índice
+
+```nexus
+var primero = lista[0]
+```
+
+## Lambdas
+
+```nexus
+var doble  = (x: Int) => x * 2
+var doble2 = x => x * 2
+```
+
+## Literales de lista
+
+```nexus
+var nums  = [1, 2, 3]
+var vacia: List<String> = []
+```
+
+## Aserción de no nulo
+
+```nexus
+var longitud: Int = nombre!.length()
+```
+
+Ver [Null safety](/docs/null-safety) para el manejo completo de nulabilidad.

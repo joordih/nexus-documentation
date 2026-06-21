@@ -1,0 +1,91 @@
+---
+title: Architecture
+description: Compilation chain, repository structure and common commands.
+icon: Network
+---
+
+## Compilation chain
+
+Nexus has a self-hosted compiler verified via a three-stage fixed-point:
+
+```
+bootstrap/ (Rust)  →  nxc-stage0
+       |
+compiler/src/      →  nxc-stage1  (stage0 compiles Nexus)
+       |
+compiler/src/      →  nxc-stage2  (stage1 compiles Nexus)
+       |
+compiler/src/      →  nxc-stage3  (stage2 compiles Nexus; must be identical to stage2)
+```
+
+`make verify-bootstrap` confirms that stage2 and stage3 are byte-identical binaries.
+
+In day-to-day use, `build/nxc-stage2` is used. Rust is only needed when rebuilding from a clean clone or after `make clean` without binaries in `build/`.
+
+## Architecture decisions
+
+**C backend.** The compiler emits portable C; `clang` links with `runtime/nexus_runtime.c` and `libgc`. Code generation is deterministic: the same input produces the same C bytes, a requirement for self-hosting.
+
+**Deterministic codegen.** The codegen sorts fields and variants alphabetically before emitting. No timestamps, absolute paths, or memory addresses are embedded in emitted C.
+
+**Runtime naming.** Emitted functions follow the `nx_method_TypeName_methodName` scheme, constructors `nx_mk_TypeName`, and conversion helpers `nx_int_to_string`, `nx_bool_to_string`, etc. The `nx_` prefix and mangling are derived from a single site in the codegen.
+
+**Imports.** Dot-separated paths (`import std.json`, `import compiler.ast`, `import lsp.server`) resolve to files under `nx/std/`, `compiler/src/` and `nx/lsp/`. The last segment is the module alias.
+
+**LSP and stdout.** The parser accumulates errors in `Program.parse_errors` instead of writing to stdout, to avoid corrupting the LSP stdio channel.
+
+**No Docker.** Local toolchain: Rust (bootstrap), clang, libgc, make.
+
+## Repository structure
+
+```
+nexus/
+  README.md
+  docs/              SPEC, GRAMMAR, RULES, NOTES, plans
+  bootstrap/         Rust compiler (stage0)
+  compiler/src/      Nexus compiler (self-hosted)
+  nx/
+    std/             standard library
+    lsp/             LSP server and IDE features
+  runtime/           C runtime
+  tests/             lexer, parser, sema, codegen, e2e, json, lsp suites
+  examples/
+  vscode-nexus/      VS Code extension
+  build/             artifacts (gitignored)
+```
+
+## Environment requirements
+
+- Stable Rust (bootstrap only)
+- clang (or gcc) and Boehm GC headers (`libgc`)
+- make
+- Node.js (to package `vscode-nexus`)
+
+## Common commands
+
+| Command | Description |
+|---------|-------------|
+| `make bootstrap` | stage0 (Rust) → `build/nxc-stage0` |
+| `make stage2` | full chain to `build/nxc-stage2` |
+| `make verify-bootstrap` | confirm stage2 == stage3 byte-by-byte |
+| `make test` | run all test suites |
+| `make nexus-lsp` | build `build/nexus-lsp` |
+| `make test-lsp` | LSP server tests |
+| `make test-json` | JSON library tests |
+| `make example NAME=hello` | compile and run `examples/hello.nx` |
+| `make clean` | delete `build/` |
+
+## Roadmap
+
+Planned language extensions after the stable self-hosting point:
+
+| Area | Contents |
+|------|----------|
+| Generics and traits | Monomorphization, static dispatch |
+| Borrow checker | Ownership analysis without changing the GC |
+| Concurrency | Goroutines, channels |
+| Async/await | Lowering to state machines |
+| LLVM backend | `codegen_llvm.nx`, e2e parity with C backend |
+| Tooling | Formatter, module packaging |
+
+Every extension must keep `make verify-bootstrap` green and update `docs/SPEC.md` and `docs/GRAMMAR.md` in the same commit that changes the language.

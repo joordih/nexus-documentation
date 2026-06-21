@@ -1,0 +1,67 @@
+---
+title: Declaraciones
+description: Funciones, tipos de datos, clases y constantes en Nexus.
+icon: FileCode
+---
+
+## Funciones libres
+
+No existe la palabra clave `fn`. Una función se identifica porque su nombre va seguido de `(`. El cuerpo puede ser un bloque `{ ... }` o una expresión con `=>`.
+
+```nexus
+suma(a: Int, b: Int): Int {
+    return a + b
+}
+
+cuadrado(x: Int): Int => x * x
+```
+
+## Constantes y variables globales
+
+```nexus
+final MAX_INTENTOS: Int = 3
+var contadorGlobal: Int = 0
+```
+
+`final` declara una constante de módulo inmutable. `var` declara una variable global mutable.
+
+## Tipos producto: `data`
+
+`data` define un tipo producto inmutable (equivalente a un record).
+
+```nexus
+data Punto {
+    x: Int
+    y: Int
+}
+
+var p = Punto(x: 3, y: 4)
+```
+
+## Tipos valor: `value`
+
+`value` define un tipo con semántica de igualdad estructural.
+
+```nexus
+value Color {
+    r: Int
+    g: Int
+    b: Int
+}
+```
+
+## Clases: `class`
+
+`class` define un tipo con estado y comportamiento. Admite un constructor primario en la cabecera:
+
+```nexus
+class Circulo(radio: Int) {
+    area(): Double => 3.14159 * radio * radio
+}
+```
+
+Los métodos reciben `this` como receptor implícito; no se declara explícitamente como parámetro.
+
+## Sintaxis solo en parser
+
+Las siguientes construcciones son aceptadas por el parser pero aún no procesadas en sema ni codegen: parámetros de tipo `<T>`, `extends`, `implements`, `interface`, `annotation`.

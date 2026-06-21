@@ -1,0 +1,36 @@
+---
+title: Nexus
+description: Lenguaje tipado estáticamente que compila a C nativo con recolección de basura.
+icon: BookOpen
+---
+
+Nexus es un lenguaje tipado estáticamente que compila a C nativo con recolección de basura (Boehm GC). El compilador es autoalojado: está escrito en Nexus y se compila a sí mismo.
+
+## Estado actual
+
+| Área | Estado |
+|------|--------|
+| `import`, funciones, `data`, `value`, `class`, variables locales y globales | Sema y codegen completos |
+| `List<T>`, `Map<K,V>`, null safety (`T?`, `?.`, `?:`, `!`) | Sema y codegen completos |
+| `if`/`else`, `while`, `for...in`, `switch`, lambdas, argumentos nombrados | Sema y codegen completos |
+| `module`, `interface`, `annotation`, `extends`, `implements`, parámetros de tipo `<T>` | Solo parser: la sintaxis es válida pero sema y codegen aún no las procesan |
+
+## Componentes del proyecto
+
+| Componente | Ubicación | Estado |
+|------------|-----------|--------|
+| Compilador semilla (Rust) | `bootstrap/` | Operativo; solo necesario para reconstruir desde cero |
+| Compilador autoalojado | `compiler/src/` | Operativo; `nxc-stage2` es el compilador de referencia |
+| Punto fijo bootstrap | `make verify-bootstrap` | Verde: stage2 y stage3 son binarios idénticos |
+| Runtime C | `runtime/` | Operativo: GC, List, Map, IO, primitivas LSP/TCP |
+| Stdlib y LSP | `nx/std/`, `nx/lsp/` | JSON, servidor LSP, features IDE |
+| Extensión VS Code | `vscode-nexus/` | Operativa con `nexus-lsp` empaquetado |
+
+<Cards>
+  <Card title="Tipos primitivos" href="/docs/primitive-types" />
+  <Card title="Módulos e imports" href="/docs/modules-imports" />
+  <Card title="Declaraciones" href="/docs/declarations" />
+  <Card title="Control de flujo" href="/docs/control-flow" />
+  <Card title="Null safety" href="/docs/null-safety" />
+  <Card title="Gramática completa" href="/docs/grammar" />
+</Cards>

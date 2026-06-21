@@ -1,0 +1,50 @@
+---
+title: Variables
+description: Declaring variables and local constants in Nexus.
+icon: Braces
+---
+
+## Declaration
+
+```nexus
+var x: Int       = 42
+var name         = "Nexus"
+final pi: Double = 3.14159
+val max: Int     = 100
+```
+
+| Keyword | Mutability |
+|---------|------------|
+| `var` | Mutable |
+| `val` | Immutable (local constant) |
+| `final` | Immutable (local or module constant) |
+
+The type annotation is optional when it can be inferred from the initial value.
+
+## Type inference
+
+```nexus
+var x = 42       // Int
+var s = "hello"  // String
+var b = true     // Bool
+```
+
+## Global variables
+
+At module level, `var` declares a mutable global variable and `final` declares a module constant:
+
+```nexus
+final VERSION: String = "1.0"
+var totalRequests: Int = 0
+```
+
+## Reassignment
+
+Only variables declared with `var` can be reassigned:
+
+```nexus
+var counter: Int = 0
+counter = counter + 1
+```
+
+Attempting to reassign a `val` or `final` variable is a compile-time error.

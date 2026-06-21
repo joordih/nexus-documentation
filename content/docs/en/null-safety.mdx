@@ -1,0 +1,79 @@
+---
+title: Null safety
+description: Nullable type system and null operators in Nexus.
+icon: ShieldCheck
+---
+
+Nexus distinguishes between types that can hold `null` and types that cannot. A non-nullable type does not accept `null`; the compiler rejects it at compile time.
+
+## Nullable types
+
+Adding `?` to any type makes it nullable:
+
+```nexus
+var name: String? = null
+var age: Int? = null
+```
+
+A type without `?` can never be `null`:
+
+```nexus
+var name: String = "Nexus"
+name = null   // compile error
+```
+
+## Safe access `?.`
+
+`?.` accesses a field or calls a method only if the receiver is not `null`. If it is `null`, it returns `null` without throwing an error:
+
+```nexus
+var name: String? = getName()
+var length: Int? = name?.length()
+```
+
+## Elvis operator `?:`
+
+`?:` provides a default value when the left-hand expression is `null`:
+
+```nexus
+var name: String? = null
+var display: String = name ?: "Anonymous"
+```
+
+Combining `?.` and `?:`:
+
+```nexus
+var length: Int = name?.length() ?: 0
+```
+
+## Non-null assertion `!`
+
+The postfix `!` operator asserts that the expression is not `null`. If at runtime the value is `null`, behavior is undefined:
+
+```nexus
+var name: String? = getName()
+var length: Int = name!.length()
+```
+
+Use `!` only when certain the value is not `null`; otherwise prefer `?.` with `?:`.
+
+## Null semantics
+
+`null` is a value of type `Void` and of any nullable type `T?`. It is not its own type, but a literal that belongs to nullable types.
+
+## Full example
+
+```nexus
+findUser(id: Int): String? {
+    if id == 0 {
+        return null
+    }
+    return "user_" + id
+}
+
+showName(id: Int): Void {
+    var name: String? = findUser(id)
+    var display: String = name ?: "unknown"
+    io.println(display)
+}
+```

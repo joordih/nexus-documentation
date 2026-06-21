@@ -1,0 +1,48 @@
+---
+title: Built-in types
+description: List and Map, the collection types of Nexus.
+icon: Layers
+---
+
+## List\<T\>
+
+Dynamic list with insertion order.
+
+```nexus
+var nums: List<Int> = [1, 2, 3]
+var empty: List<String> = []
+```
+
+### List literal
+
+```nexus
+var letters = ["a", "b", "c"]
+```
+
+### Iteration
+
+```nexus
+for num in nums {
+    io.println(num)
+}
+```
+
+### Index access
+
+```nexus
+var first = nums[0]
+```
+
+## Map\<K, V\>
+
+Associative map from key to value.
+
+```nexus
+var ages: Map<String, Int> = Map()
+```
+
+Maps are created by calling the `Map()` constructor. Insertion and access are performed through methods of the type or module as available in the stdlib.
+
+<Callout type="info">
+  Generics (`<T>`, `<K, V>`) are recognized by the parser but monomorphization and generic dispatch are planned for future phases. `List` and `Map` work because they have direct support in the C runtime.
+</Callout>

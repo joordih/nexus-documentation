@@ -1,0 +1,40 @@
+---
+title: Tipos integrados
+description: List y Map, los tipos colección de Nexus.
+icon: Layers
+---
+
+## List\<T\>
+
+Lista dinámica con orden de inserción.
+
+```nexus
+var nums: List<Int> = [1, 2, 3]
+var vacia: List<String> = []
+```
+
+Iteración con `for...in`:
+
+```nexus
+for num in nums {
+    io.println(num)
+}
+```
+
+Acceso por índice:
+
+```nexus
+var primero = nums[0]
+```
+
+## Map\<K, V\>
+
+Mapa asociativo de clave a valor.
+
+```nexus
+var edades: Map<String, Int> = Map()
+```
+
+<Callout type="info">
+  Los genéricos (`<T>`, `<K, V>`) están reconocidos en el parser pero la monomorfización está prevista para fases posteriores. `List` y `Map` funcionan porque tienen soporte directo en el runtime C.
+</Callout>

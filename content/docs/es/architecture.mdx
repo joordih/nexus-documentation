@@ -1,0 +1,68 @@
+---
+title: Arquitectura
+description: Cadena de compilación, estructura del repositorio y comandos habituales.
+icon: Network
+---
+
+## Cadena de compilación
+
+```
+bootstrap/ (Rust)  →  nxc-stage0
+       |
+compiler/src/      →  nxc-stage1  (stage0 compila Nexus)
+       |
+compiler/src/      →  nxc-stage2  (stage1 compila Nexus)
+       |
+compiler/src/      →  nxc-stage3  (stage2 compila Nexus; debe ser idéntico a stage2)
+```
+
+`make verify-bootstrap` confirma que stage2 y stage3 son binarios idénticos byte a byte.
+
+## Decisiones de arquitectura
+
+**Backend C.** El compilador emite C portable; `clang` enlaza con `runtime/nexus_runtime.c` y `libgc`. La generación de código es determinista: misma entrada → mismos bytes de C.
+
+**Codegen determinista.** Los campos y variantes se ordenan alfabéticamente antes de emitir. No se incrustan timestamps, rutas absolutas ni direcciones de memoria en el C emitido.
+
+**Nombres en runtime.** Las funciones siguen `nx_method_TypeName_methodName`, los constructores `nx_mk_TypeName`, los helpers `nx_int_to_string`. Todo derivado de un único sitio de mangling en codegen.
+
+**Sin Docker.** Toolchain local: Rust, clang, libgc, make.
+
+## Estructura del repositorio
+
+```
+nexus/
+  bootstrap/         compilador Rust (stage0)
+  compiler/src/      compilador Nexus (self-hosted)
+  nx/
+    std/             biblioteca estándar
+    lsp/             servidor LSP y features IDE
+  runtime/           runtime C
+  tests/             suites de tests
+  examples/
+  vscode-nexus/      extensión VS Code
+  build/             artefactos (gitignored)
+```
+
+## Comandos habituales
+
+| Comando | Descripción |
+|---------|-------------|
+| `make bootstrap` | stage0 (Rust) → `build/nxc-stage0` |
+| `make stage2` | cadena completa hasta `build/nxc-stage2` |
+| `make verify-bootstrap` | confirma stage2 == stage3 byte a byte |
+| `make test` | ejecuta todas las suites |
+| `make nexus-lsp` | compila `build/nexus-lsp` |
+| `make example NAME=hello` | compila y ejecuta `examples/hello.nx` |
+| `make clean` | borra `build/` |
+
+## Hoja de ruta
+
+| Área | Contenido |
+|------|-----------|
+| Genéricos y traits | Monomorfización, despacho estático |
+| Borrow checker | Análisis de propiedad sin cambiar el GC |
+| Concurrencia | Goroutines, canales |
+| Async/await | Lowering a máquinas de estado |
+| Backend LLVM | `codegen_llvm.nx`, paridad e2e con backend C |
+| Herramientas | Formateador, empaquetado de módulos |

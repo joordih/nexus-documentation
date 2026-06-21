@@ -1,0 +1,96 @@
+---
+title: Declarations
+description: Functions, data types, classes and constants in Nexus.
+icon: FileCode
+---
+
+## Free functions
+
+There is no `fn` keyword. A function is identified because its name is followed by `(`. The body can be a block `{ ... }` or an expression with `=>`.
+
+```nexus
+add(a: Int, b: Int): Int {
+    return a + b
+}
+
+square(x: Int): Int => x * x
+```
+
+Parameters are declared as `name: Type` separated by commas.
+
+## Constants and global variables
+
+```nexus
+final MAX_RETRIES: Int = 3
+var globalCounter: Int = 0
+```
+
+`final` declares an immutable module constant. `var` declares a mutable global variable.
+
+## Product types: `data`
+
+`data` defines an immutable product type (equivalent to a record). Fields are declared one per line.
+
+```nexus
+data Point {
+    x: Int
+    y: Int
+}
+```
+
+Instances are created with named arguments:
+
+```nexus
+var p = Point(x: 3, y: 4)
+```
+
+## Value types: `value`
+
+`value` defines a type with structural equality semantics.
+
+```nexus
+value Color {
+    r: Int
+    g: Int
+    b: Int
+}
+```
+
+## Classes: `class`
+
+`class` defines a type with state and behavior. It supports a primary constructor in the header:
+
+```nexus
+class Circle(radius: Int) {
+    area(): Double => 3.14159 * radius * radius
+}
+```
+
+Methods receive `this` as an implicit receiver; it is not declared explicitly as a parameter.
+
+```nexus
+class Counter(initial: Int) {
+    var count: Int = initial
+
+    increment(): Void {
+        count = count + 1
+    }
+
+    value(): Int => count
+}
+```
+
+## Syntax recognized but without sema or codegen
+
+The following constructs are accepted by the parser but not yet processed in sema or codegen:
+
+- Generic type parameters: `class Box<T>(...)`
+- `extends` and `implements`
+- `interface`
+- `annotation`
+
+```nexus
+interface Comparable {
+    compare(other: Comparable): Int
+}
+```

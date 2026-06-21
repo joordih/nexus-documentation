@@ -1,0 +1,91 @@
+{
+  "name": "nexus",
+  "scopeName": "source.nexus",
+  "fileTypes": ["nx"],
+  "patterns": [
+    { "include": "#keywords-control" },
+    { "include": "#keywords-declaration" },
+    { "include": "#constants-language" },
+    { "include": "#support-types" },
+    { "include": "#strings" },
+    { "include": "#chars" },
+    { "include": "#numbers" },
+    { "include": "#operators-null" },
+    { "include": "#operators-comparison" },
+    { "include": "#operators-logical" },
+    { "include": "#operators-arithmetic" },
+    { "include": "#operators-arrow" }
+  ],
+  "repository": {
+    "keywords-control": {
+      "name": "keyword.control.nexus",
+      "match": "\\b(if|else|while|for|in|switch|case|default|return|break|continue|try|catch|throw)\\b"
+    },
+    "keywords-declaration": {
+      "name": "keyword.declaration.nexus",
+      "match": "\\b(var|val|final|class|data|value|interface|annotation|import|module|extends|implements)\\b"
+    },
+    "constants-language": {
+      "name": "constant.language.nexus",
+      "match": "\\b(true|false|null|this)\\b"
+    },
+    "support-types": {
+      "name": "support.type.primitive.nexus",
+      "match": "\\b(Int|Long|Float|Double|Bool|Char|String|Void|List|Map)\\b"
+    },
+    "strings": {
+      "name": "string.quoted.double.nexus",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.nexus",
+          "match": "\\\\[\"'\\\\ntr0]"
+        }
+      ]
+    },
+    "chars": {
+      "name": "string.quoted.single.nexus",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.nexus",
+          "match": "\\\\[\"'\\\\ntr0]"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.nexus",
+          "match": "\\b[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.nexus",
+          "match": "\\b[0-9]+\\b"
+        }
+      ]
+    },
+    "operators-null": {
+      "name": "keyword.operator.null-safety.nexus",
+      "match": "\\?\\.|-?\\?:"
+    },
+    "operators-comparison": {
+      "name": "keyword.operator.comparison.nexus",
+      "match": "==|!=|<=|>=|<|>"
+    },
+    "operators-logical": {
+      "name": "keyword.operator.logical.nexus",
+      "match": "&&|\\|\\|"
+    },
+    "operators-arithmetic": {
+      "name": "keyword.operator.arithmetic.nexus",
+      "match": "[+\\-*/%]"
+    },
+    "operators-arrow": {
+      "name": "keyword.operator.arrow.nexus",
+      "match": "=>"
+    }
+  }
+}

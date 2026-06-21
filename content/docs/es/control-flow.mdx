@@ -1,0 +1,84 @@
+---
+title: Control de flujo
+description: Sentencias de control de flujo en Nexus.
+icon: GitBranch
+---
+
+## if / else
+
+```nexus
+if condicion {
+    accionSiVerdadero()
+} else if x < 0 {
+    accionElseIf()
+} else {
+    accionSiFalso()
+}
+```
+
+## while
+
+```nexus
+while condicion {
+    hacer()
+}
+```
+
+## for...in
+
+Itera sobre una lista u otra colección:
+
+```nexus
+for elemento in lista {
+    io.println(elemento)
+}
+```
+
+## switch
+
+```nexus
+switch valor {
+    case 1 => accion()
+    case 2 => otraAccion()
+    default => porDefecto()
+}
+```
+
+Cada rama puede ser una expresión o un bloque:
+
+```nexus
+switch estado {
+    case "activo" => {
+        conectar()
+        inicializar()
+    }
+    default => io.println("inactivo")
+}
+```
+
+## return / break / continue
+
+```nexus
+while true {
+    var linea = io.readLine()
+    if linea == "" { break }
+    if linea == "saltar" { continue }
+    procesar(linea)
+}
+```
+
+## try / catch / throw
+
+```nexus
+try {
+    var resultado = operacionRiesgosa()
+} catch (err) {
+    io.println(err)
+}
+```
+
+<Callout type="info">
+  `try`, `catch` y `throw` están parcialmente implementados en sema/codegen. Ver `docs/NOTES.md` para el estado exacto.
+</Callout>
+
+Los puntos y coma al final de las sentencias son opcionales.

@@ -1,0 +1,62 @@
+---
+title: Tipos primitivos
+description: Los tipos de datos básicos del lenguaje Nexus.
+icon: Hash
+---
+
+Los nombres de tipo en Nexus comienzan en mayúscula.
+
+## Tipos numéricos
+
+| Tipo | Descripción |
+|------|-------------|
+| `Int` | Entero con signo de 64 bits |
+| `Long` | Entero con signo de 64 bits (alias explícito de `Int`) |
+| `Float` | Coma flotante de 32 bits |
+| `Double` | Coma flotante de 64 bits |
+
+<Callout type="warn">
+  La aritmética y conversión a cadena de `Float` y `Double` aún no está implementada en el codegen. El soporte completo está previsto en fases posteriores.
+</Callout>
+
+## Otros tipos primitivos
+
+| Tipo | Descripción |
+|------|-------------|
+| `Bool` | Booleano. Literales: `true`, `false` |
+| `Char` | Carácter Unicode. Literal: `'a'` |
+| `String` | Cadena de texto. Literal: `"hola"` |
+| `Void` | Ausencia de valor de retorno |
+
+## Null
+
+`null` es un valor del tipo `Void` y de cualquier tipo nullable `T?`. Un tipo no nullable no puede contener `null`; el compilador lo rechaza en tiempo de compilación.
+
+```nexus
+var nombre: String? = null
+var longitud = nombre?.length() ?: 0
+```
+
+Ver [Null safety](/docs/null-safety) para la semántica completa.
+
+## Literales
+
+```nexus
+var entero: Int     = 42
+var flotante: Float = 3.14
+var booleano: Bool  = true
+var caracter: Char  = 'x'
+var cadena: String  = "Nexus"
+```
+
+### Secuencias de escape
+
+| Secuencia | Significado |
+|-----------|-------------|
+| `\"` | Comilla doble |
+| `\'` | Comilla simple |
+| `\\` | Barra invertida |
+| `\n` | Nueva línea |
+| `\t` | Tabulador |
+| `\r` | Retorno de carro |
+| `\0` | Nulo |

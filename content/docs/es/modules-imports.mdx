@@ -1,0 +1,55 @@
+---
+title: Módulos e imports
+description: Sistema de módulos e importaciones de Nexus.
+icon: Package
+---
+
+## Declaración de módulo
+
+```nexus
+module com.ejemplo.miapp
+```
+
+`module` declara el nombre lógico del fichero. Actualmente solo se parsea; no tiene efecto en sema ni codegen.
+
+## Importaciones
+
+```nexus
+import std.io
+import std.json
+import compiler.ast
+import lsp.documents
+```
+
+`import` registra un módulo y expone sus funciones de nivel superior bajo el alias del último segmento del path.
+
+## Resolución de rutas
+
+Las rutas con punto se resuelven a ficheros `.nx`:
+
+| Import | Fichero |
+|--------|---------|
+| `import std.io` | módulo builtin `io` |
+| `import std.json` | `nx/std/json.nx` |
+| `import std.json.value` | `nx/std/json/value.nx` |
+| `import compiler.ast` | `compiler/src/ast.nx` |
+| `import lsp.features.hover` | `nx/lsp/features/hover.nx` |
+
+El código Nexus fuera del compilador vive en `nx/`: la stdlib bajo `nx/std/` y el servidor LSP bajo `nx/lsp/`. El compilador autoalojado permanece en `compiler/src/`.
+
+## Alias del módulo
+
+El último segmento del path es el alias bajo el que se accede al módulo:
+
+```nexus
+import std.json
+
+var resultado = json.parse(texto)
+var cadena    = json.stringify(valor)
+```
+
+```nexus
+import std.io
+
+io.println("hola")
+```

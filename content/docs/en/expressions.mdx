@@ -1,0 +1,104 @@
+---
+title: Expressions
+description: Operators, precedence and expression forms in Nexus.
+icon: Calculator
+---
+
+## Operator precedence
+
+From lowest to highest binding:
+
+| Level | Operator(s) | Associativity |
+|-------|------------|---------------|
+| 1 | `?:` (Elvis) | Right |
+| 2 | `\|\|` | Left |
+| 3 | `&&` | Left |
+| 4 | `==` `!=` | Left |
+| 5 | `<` `<=` `>` `>=` | Left |
+| 6 | `+` `-` | Left |
+| 7 | `*` `/` `%` | Left |
+| 8 | `!` `-` (unary prefix) | — |
+| 9 | `()` `.x` `?.x` `[]` `!` (postfix) | Highest |
+
+## Arithmetic operators
+
+```nexus
+var sum  = 10 + 3
+var diff = 10 - 3
+var prod = 10 * 3
+var div  = 10 / 3
+var mod  = 10 % 3
+```
+
+## Relational and equality operators
+
+```nexus
+var greater = 5 > 3
+var equal   = a == b
+var notEq   = a != b
+```
+
+## Logical operators
+
+```nexus
+var and = a && b
+var or  = a || b
+var not = !a
+```
+
+## Field access and method calls
+
+```nexus
+p.x
+svc.calculate(p)
+list.length()
+```
+
+A `.name` suffix followed by `(...)` is a method call; without parentheses it is field access.
+
+## Named arguments
+
+Arguments can be passed by name in any call:
+
+```nexus
+var p = Point(x: 3, y: 4)
+draw(origin: p, scale: 2)
+```
+
+Named and positional arguments can be mixed in the same call.
+
+## Index access
+
+```nexus
+var first = list[0]
+```
+
+## Lambdas
+
+```nexus
+var double = (x: Int) => x * 2
+var add    = (a: Int, b: Int) => a + b
+```
+
+With a single parameter, parentheses are optional:
+
+```nexus
+var double = x => x * 2
+```
+
+## List literals
+
+```nexus
+var nums  = [1, 2, 3]
+var empty: List<String> = []
+```
+
+## Non-null assertion
+
+The postfix `!` operator asserts that the expression is not `null`. If at runtime the value is `null`, behavior is undefined:
+
+```nexus
+var length: Int = name!.length()
+```
+
+See [Null safety](/docs/en/null-safety) for the full nullability handling.

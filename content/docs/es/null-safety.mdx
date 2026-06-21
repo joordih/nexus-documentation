@@ -1,0 +1,58 @@
+---
+title: Null safety
+description: Sistema de tipos nullable y operadores de nulabilidad en Nexus.
+icon: ShieldCheck
+---
+
+Nexus distingue entre tipos que pueden contener `null` y tipos que no. El compilador rechaza `null` para tipos no nullable en tiempo de compilación.
+
+## Tipos nullable
+
+Añadir `?` a cualquier tipo lo hace nullable:
+
+```nexus
+var nombre: String? = null
+var edad: Int? = null
+```
+
+## Acceso seguro `?.`
+
+Devuelve `null` si el receptor es `null`, sin lanzar error:
+
+```nexus
+var nombre: String? = obtenerNombre()
+var longitud: Int? = nombre?.length()
+```
+
+## Operador Elvis `?:`
+
+Proporciona un valor por defecto cuando la izquierda es `null`:
+
+```nexus
+var mostrar: String = nombre ?: "Anónimo"
+var longitud: Int = nombre?.length() ?: 0
+```
+
+## Aserción de no nulo `!`
+
+Aserta que la expresión no es `null`. El comportamiento es indefinido si lo es:
+
+```nexus
+var longitud: Int = nombre!.length()
+```
+
+Preferir `?.` con `?:` salvo que se tenga certeza de que el valor no es `null`.
+
+## Ejemplo
+
+```nexus
+buscarUsuario(id: Int): String? {
+    if id == 0 { return null }
+    return "usuario_" + id
+}
+
+mostrarNombre(id: Int): Void {
+    var nombre: String? = buscarUsuario(id)
+    io.println(nombre ?: "desconocido")
+}
+```

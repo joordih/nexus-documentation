@@ -1,0 +1,57 @@
+---
+title: Modules & imports
+description: The module and import system of Nexus.
+icon: Package
+---
+
+## Module declaration
+
+```nexus
+module com.example.myapp
+```
+
+`module` declares the logical name of the file. Currently it is only parsed; it has no effect on sema or codegen.
+
+## Imports
+
+```nexus
+import std.io
+import std.json
+import compiler.ast
+import lsp.documents
+```
+
+`import` registers a module and exposes its top-level functions under the alias of the last segment of the path.
+
+## Path resolution
+
+Dot-separated paths resolve to `.nx` files:
+
+| Import | File |
+|--------|------|
+| `import std.io` | built-in `io` module |
+| `import std.json` | `nx/std/json.nx` |
+| `import std.json.value` | `nx/std/json/value.nx` |
+| `import compiler.ast` | `compiler/src/ast.nx` |
+| `import lsp.features.hover` | `nx/lsp/features/hover.nx` |
+
+Nexus code outside the compiler lives in `nx/`: the stdlib under `nx/std/` and the LSP server under `nx/lsp/`. The self-hosted compiler stays in `compiler/src/`.
+
+## Module alias
+
+The last path segment is the alias under which the module is accessed:
+
+```nexus
+import std.json
+
+var result = json.parse(text)
+var str    = json.stringify(value)
+```
+
+```nexus
+import std.io
+
+io.println("hello")
+```
+
+Calls of the form `alias.function(...)` resolve to top-level functions of the imported module.

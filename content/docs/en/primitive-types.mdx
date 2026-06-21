@@ -1,0 +1,62 @@
+---
+title: Primitive types
+description: The basic data types of the Nexus language.
+icon: Hash
+---
+
+Type names in Nexus start with an uppercase letter.
+
+## Numeric types
+
+| Type | Description |
+|------|-------------|
+| `Int` | Signed 64-bit integer |
+| `Long` | Signed 64-bit integer (explicit alias for `Int`) |
+| `Float` | 32-bit floating point |
+| `Double` | 64-bit floating point |
+
+<Callout type="warn">
+  Arithmetic and string conversion for `Float` and `Double` are not yet implemented in the codegen. Full support is planned for a future phase.
+</Callout>
+
+## Other primitive types
+
+| Type | Description |
+|------|-------------|
+| `Bool` | Boolean. Literals: `true`, `false` |
+| `Char` | Unicode character. Literal: `'a'` |
+| `String` | Text string. Literal: `"hello"` |
+| `Void` | Absence of a return value |
+
+## Null
+
+`null` is a value of type `Void` and of any nullable type `T?`. A non-nullable type cannot hold `null`; the compiler rejects it at compile time.
+
+```nexus
+var name: String? = null
+var length = name?.length() ?: 0
+```
+
+See [Null safety](/docs/en/null-safety) for the full semantics.
+
+## Literals
+
+```nexus
+var integer: Int    = 42
+var floating: Float = 3.14
+var boolean: Bool   = true
+var character: Char = 'x'
+var text: String    = "Nexus"
+```
+
+### Escape sequences in strings and characters
+
+| Sequence | Meaning |
+|----------|---------|
+| `\"` | Double quote |
+| `\'` | Single quote |
+| `\\` | Backslash |
+| `\n` | Newline |
+| `\t` | Tab |
+| `\r` | Carriage return |
+| `\0` | Null |

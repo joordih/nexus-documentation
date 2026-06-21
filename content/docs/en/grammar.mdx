@@ -1,0 +1,253 @@
+---
+title: Grammar
+description: Formal grammar of Nexus Core in EBNF notation.
+icon: ScrollText
+---
+
+This is the authoritative grammar of Nexus Core. It uses a variant of EBNF:
+
+- `=` defines a rule.
+- `|` separates alternatives.
+- `{ X }` means zero or more repetitions of `X`.
+- `[ X ]` means `X` is optional.
+- `"text"` is a literal terminal.
+- Names in UPPERCASE are lexical tokens produced by the lexer.
+- `EOF` is the end of input.
+
+## Lexical structure
+
+### Identifiers and keywords
+
+```
+letter = "a" .. "z" | "A" .. "Z" | "_" ;
+digit  = "0" .. "9" ;
+IDENT  = letter { letter | digit } ;
+```
+
+Reserved words:
+
+```
+var val final class data value interface annotation
+import module extends implements
+if else while for in switch case default
+return break continue try catch throw
+true false null this
+```
+
+Primitive type names (`Int`, `Bool`, `String`, `Void`, etc.) are pre-declared identifiers, not keywords.
+
+### Literals
+
+```
+INT    = digit { digit } ;
+FLOAT  = digit { digit } "." digit { digit } ;
+STRING = '"' { string_char } '"' ;
+CHAR   = "'" ( char_char | escape ) "'" ;
+
+string_char = any_char_except_quote_and_backslash | escape ;
+char_char   = any_char_except_single_quote_and_backslash ;
+escape      = "\" ( '"' | "'" | "\" | "n" | "t" | "r" | "0" ) ;
+```
+
+### Operators and punctuation
+
+```
++   -   *   /   %
+==  !=  <   <=  >   >=
+&&  ||  !
+=   =>  ->
+.   ,   :   ;
+(   )   {   }   [   ]
+@   ?   ?.  ?:
+```
+
+The lexer applies maximal munch: `?.` and `?:` are recognized before `?` alone.
+
+## Syntactic grammar
+
+### Program and items
+
+```
+program = { item } EOF ;
+
+item    = module_decl
+        | import_decl
+        | global_decl
+        | class_decl
+        | data_decl
+        | value_decl
+        | interface_decl
+        | annotation_decl
+        | function ;
+```
+
+### Module and imports
+
+```
+module_decl = "module" dot_path ;
+import_decl = "import" dot_path ;
+dot_path    = IDENT { "." IDENT } ;
+```
+
+### Constants and global variables
+
+```
+global_decl = ( "var" | "val" | "final" ) IDENT [ ":" type ] "=" expr [ ";" ] ;
+```
+
+### Applied annotations
+
+```
+annotation_use = "@" IDENT [ "(" named_arg_list ")" ] ;
+```
+
+### Data declarations
+
+```
+data_decl  = { annotation_use } "data" IDENT "{" { field_decl } "}" ;
+value_decl = { annotation_use } "value" IDENT "{" { field_decl } "}" ;
+field_decl = IDENT ":" type ;
+```
+
+Fields are separated by newlines or optional semicolons.
+
+### Class declaration
+
+```
+class_decl     = { annotation_use } "class" IDENT [ type_params ]
+                 [ "(" [ field_list ] ")" ]
+                 [ "extends" type ]
+                 [ "implements" type { "," type } ]
+                 "{" { class_member } "}" ;
+
+type_params    = "<" IDENT { "," IDENT } ">" ;
+field_list     = field_decl { "," field_decl } ;
+class_member   = { annotation_use } function ;
+```
+
+### Interface declaration
+
+```
+interface_decl = { annotation_use } "interface" IDENT [ type_params ]
+                 [ "extends" type { "," type } ]
+                 "{" { method_sig } "}" ;
+
+method_sig     = IDENT "(" [ param_list ] ")" ":" type ;
+```
+
+### Annotation declaration
+
+```
+annotation_decl = "annotation" IDENT "{" { field_decl } "}" ;
+```
+
+### Functions
+
+```
+function      = IDENT "(" [ param_list ] ")" ":" type function_body ;
+param_list    = param { "," param } ;
+param         = IDENT ":" type ;
+function_body = block | "=>" expr ;
+```
+
+### Types
+
+```
+type       = named_type [ "?" ] ;
+named_type = dot_path [ "<" type_args ">" ] ;
+type_args  = type { "," type } ;
+```
+
+### Blocks and statements
+
+```
+block         = "{" { stmt } "}" ;
+
+stmt          = var_stmt
+              | return_stmt
+              | break_stmt
+              | continue_stmt
+              | if_stmt
+              | while_stmt
+              | for_stmt
+              | switch_stmt
+              | try_stmt
+              | throw_stmt
+              | expr_stmt ;
+
+var_stmt      = ( "var" | "val" | "final" ) IDENT [ ":" type ] "=" expr [ ";" ] ;
+return_stmt   = "return" [ expr ] [ ";" ] ;
+break_stmt    = "break" [ ";" ] ;
+continue_stmt = "continue" [ ";" ] ;
+if_stmt       = "if" expr block [ "else" ( if_stmt | block ) ] ;
+while_stmt    = "while" expr block ;
+for_stmt      = "for" IDENT "in" expr block ;
+switch_stmt   = "switch" expr "{" { switch_arm } "}" ;
+switch_arm    = ( "case" expr | "default" ) "=>" ( block | expr [ ";" ] ) ;
+try_stmt      = "try" block "catch" "(" IDENT ")" block ;
+throw_stmt    = "throw" [ ";" ] ;
+expr_stmt     = expr [ ";" ] ;
+```
+
+### Expressions
+
+```
+expr         = elvis_expr ;
+elvis_expr   = or_expr [ "?:" or_expr ] ;
+or_expr      = and_expr { "||" and_expr } ;
+and_expr     = equality { "&&" equality } ;
+equality     = comparison { ( "==" | "!=" ) comparison } ;
+comparison   = term { ( "<" | "<=" | ">" | ">=" ) term } ;
+term         = factor { ( "+" | "-" ) factor } ;
+factor       = unary { ( "*" | "/" | "%" ) unary } ;
+unary        = ( "!" | "-" ) unary | postfix ;
+postfix      = primary { postfix_op } ;
+postfix_op   = "." IDENT [ call_args ]
+             | "?." IDENT [ call_args ]
+             | call_args
+             | "[" expr "]"
+             | "!" ;
+call_args    = "(" [ arg_list ] ")" ;
+arg_list     = call_arg { "," call_arg } ;
+call_arg     = IDENT ":" expr | expr ;
+```
+
+### Primaries
+
+```
+primary     = INT
+            | FLOAT
+            | STRING
+            | CHAR
+            | "true"
+            | "false"
+            | "null"
+            | "this"
+            | lambda_expr
+            | list_literal
+            | IDENT
+            | "(" expr ")" ;
+```
+
+### Lambda
+
+```
+lambda_expr   = lambda_params "=>" expr ;
+lambda_params = IDENT
+              | "(" [ IDENT { "," IDENT } ] ")" ;
+```
+
+### List literal
+
+```
+list_literal    = "[" [ arg_list_expr ] "]" ;
+arg_list_expr   = expr { "," expr } ;
+```
+
+## Outside current scope
+
+Syntax not included in Nexus Core today:
+
+- Compound assignment (`+=`, `-=`, `*=`, `/=`).
+- List comprehensions.
+- Macros.
