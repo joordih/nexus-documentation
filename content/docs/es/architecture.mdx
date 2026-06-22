@@ -30,19 +30,39 @@ compiler/src/      →  nxc-stage3  (stage2 compila Nexus; debe ser idéntico a 
 
 ## Estructura del repositorio
 
-```
-nexus/
-  bootstrap/         compilador Rust (stage0)
-  compiler/src/      compilador Nexus (self-hosted)
-  nx/
-    std/             biblioteca estándar
-    lsp/             servidor LSP y features IDE
-  runtime/           runtime C
-  tests/             suites de tests
-  examples/
-  vscode-nexus/      extensión VS Code
-  build/             artefactos (gitignored)
-```
+<Files>
+  <File name="README.md" />
+  <Folder name="docs" defaultOpen>
+    SPEC, GRAMMAR, RULES, NOTES, plans
+  </Folder>
+  <Folder name="bootstrap" defaultOpen>
+    compilador Rust (stage0)
+  </Folder>
+  <Folder name="compiler/src" defaultOpen>
+    compilador Nexus (self-hosted)
+  </Folder>
+  <Folder name="nx" defaultOpen>
+    <Folder name="std">
+      biblioteca estándar
+    </Folder>
+    <Folder name="lsp">
+      servidor LSP y features IDE
+    </Folder>
+  </Folder>
+  <Folder name="runtime" defaultOpen>
+    runtime C
+  </Folder>
+  <Folder name="tests">
+    suites de tests
+  </Folder>
+  <Folder name="examples" />
+  <Folder name="vscode-nexus">
+    extensión VS Code
+  </Folder>
+  <Folder name="build">
+    artefactos (gitignored)
+  </Folder>
+</Files>
 
 ## Comandos habituales
 

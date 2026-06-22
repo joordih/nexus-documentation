@@ -24,9 +24,24 @@ export default async function Page({
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
+  const isIndexPage = !slug || slug.length === 0;
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
+      {isIndexPage && (
+        <div className="flex justify-center mb-8">
+          <img
+            src="/nexus-logo-nobg-black.png"
+            alt="Nexus"
+            className="h-16 w-auto dark:hidden"
+          />
+          <img
+            src="/nexus-logo-nobg-white.png"
+            alt="Nexus"
+            className="hidden h-16 w-auto dark:block"
+          />
+        </div>
+      )}
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="flex flex-row gap-2 items-center border-b pb-6">

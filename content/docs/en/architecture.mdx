@@ -38,21 +38,39 @@ In day-to-day use, `build/nxc-stage2` is used. Rust is only needed when rebuildi
 
 ## Repository structure
 
-```
-nexus/
-  README.md
-  docs/              SPEC, GRAMMAR, RULES, NOTES, plans
-  bootstrap/         Rust compiler (stage0)
-  compiler/src/      Nexus compiler (self-hosted)
-  nx/
-    std/             standard library
-    lsp/             LSP server and IDE features
-  runtime/           C runtime
-  tests/             lexer, parser, sema, codegen, e2e, json, lsp suites
-  examples/
-  vscode-nexus/      VS Code extension
-  build/             artifacts (gitignored)
-```
+<Files>
+  <File name="README.md" />
+  <Folder name="docs" defaultOpen>
+    SPEC, GRAMMAR, RULES, NOTES, plans
+  </Folder>
+  <Folder name="bootstrap" defaultOpen>
+    Rust compiler (stage0)
+  </Folder>
+  <Folder name="compiler/src" defaultOpen>
+    Nexus compiler (self-hosted)
+  </Folder>
+  <Folder name="nx" defaultOpen>
+    <Folder name="std">
+      standard library
+    </Folder>
+    <Folder name="lsp">
+      LSP server and IDE features
+    </Folder>
+  </Folder>
+  <Folder name="runtime" defaultOpen>
+    C runtime
+  </Folder>
+  <Folder name="tests">
+    lexer, parser, sema, codegen, e2e, json, lsp suites
+  </Folder>
+  <Folder name="examples" />
+  <Folder name="vscode-nexus">
+    VS Code extension
+  </Folder>
+  <Folder name="build">
+    artifacts (gitignored)
+  </Folder>
+</Files>
 
 ## Environment requirements
 

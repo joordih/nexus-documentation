@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Zap, Shield, Code2, Star } from 'lucide-react';
+import { GithubInfo } from 'fumadocs-ui/components/github-info';
+import { gitConfig } from '@/lib/shared';
 
 const FEATURES = [
   {
@@ -82,6 +84,14 @@ export default async function HomePage() {
             </p>
           </div>
         ))}
+      </section>
+
+      <section className="w-full max-w-2xl">
+        <GithubInfo
+          owner={gitConfig.user}
+          repo={gitConfig.repo}
+          className="border-t border-fd-border pt-3"
+        />
       </section>
     </main>
   );

@@ -14,7 +14,23 @@ export const translations = i18n
 
 export function baseOptions(_locale?: string): BaseLayoutProps {
   return {
-    nav: { title: appName },
+    nav: {
+      title: (
+        <>
+          <img
+            src="/nexus-icon-nobg-black.png"
+            alt=""
+            className="h-6 w-6 dark:hidden"
+          />
+          <img
+            src="/nexus-icon-nobg-white.png"
+            alt=""
+            className="hidden h-6 w-6 dark:block"
+          />
+          {appName}
+        </>
+      ),
+    },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
     i18n: true,
   };

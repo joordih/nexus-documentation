@@ -2,6 +2,14 @@
 @import 'fumadocs-ui/css/solar.css';
 @import 'fumadocs-ui/css/preset.css';
 
+@theme {
+  --color-fd-primary: oklab(80.5% 0.07665 -0.10106);
+}
+
+.dark {
+  --color-fd-primary: oklab(80.5% 0.07665 -0.10106);
+}
+
 html {
   scrollbar-gutter: stable;
 }

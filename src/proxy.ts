@@ -15,8 +15,14 @@ const { rewrite: rewriteSuffix } = rewritePath(
   `${docsContentRoute}{/*path}/content.md`,
 );
 
+const staticFilePattern = /\.(?:png|jpe?g|gif|svg|webp|ico)$/i;
+
 export function proxy(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
+
+  if (staticFilePattern.test(pathname)) {
+    return NextResponse.next();
+  }
 
   const suffixResult = rewriteSuffix(pathname);
   if (suffixResult) {
@@ -30,15 +36,11 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
-  if (pathname === docsRoute || pathname.startsWith(`${docsRoute}/`)) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/en${pathname}`;
-    return NextResponse.rewrite(url);
-  }
-
   return i18nMiddleware(request, event);
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|og).*)'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|og|.*\\.(?:png|jpe?g|gif|svg|webp|ico)$).*)',
+  ],
 };
